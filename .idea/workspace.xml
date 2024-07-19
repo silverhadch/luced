@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8a66756-d915-4a8c-9063-290a078a646b" name="Changes" comment="">
+    <list default="true" id="b8a66756-d915-4a8c-9063-290a078a646b" name="Changes" comment="Prepera Beta">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/T.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test1.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test11.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -20,6 +16,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "silverhadch"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/silverhadch/luced.git",
+    "accountId": "38dcfb63-d06b-4f3a-a55f-708cf8368ae0"
+  }
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -59,9 +67,20 @@
       <option name="presentableId" value="Default" />
       <updated>1721370574033</updated>
     </task>
+    <task id="LOCAL-00001" summary="Prepera Beta">
+      <option name="closed" value="true" />
+      <created>1721387283512</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1721387283512</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Prepera Beta" />
+    <option name="LAST_COMMIT_MESSAGE" value="Prepera Beta" />
   </component>
 </project>

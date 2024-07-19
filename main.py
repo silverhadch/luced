@@ -1,53 +1,16 @@
 import curses
-import pyperclip  # Dependency
+import pyperclip
 import argparse
 import os
-import sys
-
-def load_file(filename):
-    """Load the content of the File, if it doesn't exist create one"""
-    text = []
-    new_file = False
-    if not os.path.exists(filename):
-        # File does not exist, create it and initialize with an empty line
-        with open(filename, "w") as file:
-            file.write("\n")
-        new_file = True
-
-    try:
-        with open(filename, "r") as file:
-            text = file.readlines()
-            if not text:
-                text = [""]  # Ensure one line because of this line bug
-    except IOError as e:
-        print(f"Error loading file: {e}")
-        text = [""]
-
-    return [line.rstrip() for line in text], new_file
-
-def save_file(filename, text):
-    """Save the text to the File"""
-    try:
-        with open(filename, "w") as file:
-            for line in text:
-                file.write(line + "\n")
-        return True
-    except IOError as e:
-        print(f"Error saving file: {e}")
-        return False
-
-def signal_handler(signum, frame):
-    """Handle the Interrupt-Signal (Ctrl-C) and exit."""
-    raise KeyboardInterrupt  # Raise KeyboardInterrupt to exit
 
 def draw_text(stdscr, text, cursor_y, cursor_x, message=None):
-    """Draw the text on the screen with cursor position and display a message if needed."""
+    """Draw the text on the screen with cursor position and a message if needed."""
     stdscr.clear()
-    max_y, max_x = stdscr.getmaxyx()
+    max_y, max_x = stdscr.getmaxyx()  # Ensure these variables are set here
 
     # Draw top and bottom bars
     top_bar = "Luced v.1.0 - Terminal Text Editor"
-    bottom_bar = "Ctrl + V: Paste Clipboard Content  Ctrl + S: Save File  Ctrl + Q: Exit"
+    bottom_bar = "Ctrl + V: Paste Clipboard Content  Ctrl + S: Save File  Ctrl + Q: Exit  Alt + C: Copy to Clipboard"
 
     # Center the top bar
     top_bar_x = (max_x - len(top_bar)) // 2
@@ -61,7 +24,7 @@ def draw_text(stdscr, text, cursor_y, cursor_x, message=None):
 
     # Display a message if needed
     if message:
-        stdscr.addstr(max_y - 2, (max_x - len(message)) // 2, message, curses.A_BOLD | curses.A_REVERSE)
+        stdscr.addstr(max_y // 2, (max_x - len(message)) // 2, message, curses.A_BOLD | curses.A_REVERSE)
 
     # Ensure cursor_y and cursor_x don't go out of bounds
     cursor_y = min(max(cursor_y, 1), len(text) + 1)
@@ -75,22 +38,8 @@ def draw_text(stdscr, text, cursor_y, cursor_x, message=None):
         line_y = 1 + idx
         # Wrap long lines to fit within the terminal width
         wrapped_lines = [line[i:i + max_x] for i in range(0, len(line), max_x)]
-
         for line_idx, wrapped_line in enumerate(wrapped_lines):
-            if start_y - 1 + idx == cursor_y - 1 and line_idx == 0:
-                # Draw the line with the cursor position highlighted
-                if cursor_x < len(wrapped_line):
-                    # Handle text before cursor
-                    stdscr.addstr(line_y, 0, wrapped_line[:cursor_x])
-                    # Handle cursor character
-                    stdscr.addstr(line_y, cursor_x, wrapped_line[cursor_x], curses.A_REVERSE)
-                    # Handle text after cursor
-                    if cursor_x + 1 < len(wrapped_line):
-                        stdscr.addstr(line_y, cursor_x + 1, wrapped_line[cursor_x + 1:])
-                else:
-                    stdscr.addstr(line_y, 0, wrapped_line)
-            else:
-                stdscr.addstr(line_y + line_idx, 0, wrapped_line[:max_x])
+            stdscr.addstr(line_y, 0, wrapped_line)
 
     # Move the cursor to the necessary position
     try:
@@ -100,9 +49,8 @@ def draw_text(stdscr, text, cursor_y, cursor_x, message=None):
 
     stdscr.refresh()
 
-def move_cursor(stdscr, text, key, cursor_y, cursor_x):
+def move_cursor(key, cursor_y, cursor_x, text, max_y, max_x):
     """Update cursor position based on key input."""
-    max_y, max_x = stdscr.getmaxyx()
     num_lines = len(text)
 
     if key == curses.KEY_LEFT:
@@ -110,7 +58,7 @@ def move_cursor(stdscr, text, key, cursor_y, cursor_x):
             cursor_x -= 1
         elif cursor_y > 1:
             cursor_y -= 1
-            cursor_x = min(cursor_x, len(text[cursor_y - 1]))
+            cursor_x = min(cursor_x, len(text[cursor_y - 2]))
     elif key == curses.KEY_RIGHT:
         if cursor_x < len(text[cursor_y - 1]):
             cursor_x += 1
@@ -127,8 +75,8 @@ def move_cursor(stdscr, text, key, cursor_y, cursor_x):
             cursor_x = min(cursor_x, len(text[cursor_y - 1]))
 
     # Handle cursor wrapping to the next line if at the end of a line
-    if cursor_x > max_x - 1:
-        cursor_x = 0
+    if cursor_x >= max_x:
+        cursor_x = max_x - 1
         cursor_y += 1
         if cursor_y > len(text):
             text.append("")
@@ -139,12 +87,28 @@ def move_cursor(stdscr, text, key, cursor_y, cursor_x):
     return cursor_y, cursor_x
 
 def main(stdscr, filename):
-    # Check if running as root
+    # If running as root, check for -E flag by examining an environment variable
+    # Without -E the clipboard will break
     if os.geteuid() == 0:
         stdscr.clear()
         max_y, max_x = stdscr.getmaxyx()
-        warning_message = "You are root! Proceed with caution!"
-        stdscr.addstr(max_y // 2, (max_x - len(warning_message)) // 2, warning_message, curses.A_BLINK | curses.A_REVERSE)
+        warning_root = "You are root! Proceed with caution!"
+
+        # Check if the env HOME is set to detect if -E was used
+        if 'HOME' in os.environ and os.environ['HOME'] != '/root':
+            clipboard_warning = ""
+        else:
+            clipboard_warning = "(If you want to use the Clipboard, relaunch with sudo -E)"
+
+        # Calculate the centered position for the warning_root
+        warning_root_x = (max_x - len(warning_root)) // 2
+        stdscr.addstr(max_y // 2 - 1, warning_root_x, warning_root, curses.A_BLINK | curses.A_REVERSE)
+
+        if clipboard_warning:
+            # Calculate the centered position for the clipboard_warning
+            clipboard_warning_x = (max_x - len(clipboard_warning)) // 2
+            stdscr.addstr(max_y // 2, clipboard_warning_x, clipboard_warning, curses.A_BLINK | curses.A_REVERSE)
+
         stdscr.refresh()
         stdscr.getch()  # Wait for user input before continuing
 
@@ -165,6 +129,7 @@ def main(stdscr, filename):
     cursor_y = 1  # Start cursor at line 1 (below the top bar)
 
     while True:
+        # Draw text
         draw_text(stdscr, text, cursor_y, cursor_x)
 
         key = stdscr.getch()
@@ -208,8 +173,18 @@ def main(stdscr, filename):
                 text[cursor_y - 1] = text[cursor_y - 1][:cursor_x]
             cursor_y += 1
             cursor_x = 0
+        elif key == 27:  # Alt key
+            alt_key = stdscr.getch()
+            if alt_key == ord('c'):
+                # Copy line to clipboard
+                if cursor_y <= len(text):
+                    pyperclip.copy(text[cursor_y - 1])
+                    draw_text(stdscr, text, cursor_y, cursor_x, "Line copied to clipboard.")
+                    stdscr.getch()  # Wait for a key press before continuing
         else:
-            cursor_y, cursor_x = move_cursor(stdscr, text, key, cursor_y, cursor_x)
+            cursor_y, cursor_x = move_cursor(
+                key, cursor_y, cursor_x, text, stdscr.getmaxyx()[0], stdscr.getmaxyx()[1]
+            )
             if 32 <= key <= 126:
                 if cursor_y <= len(text):
                     text[cursor_y - 1] = text[cursor_y - 1][:cursor_x] + chr(key) + text[cursor_y - 1][cursor_x:]
@@ -221,8 +196,40 @@ def main(stdscr, filename):
     curses.noraw()
     stdscr.keypad(False)
 
+def load_file(filename):
+    """Load the content of the file, if it doesn't exist create one."""
+    text = []
+    new_file = False
+    if not os.path.exists(filename):
+        # File does not exist, create it and initialize with an empty line
+        with open(filename, "w") as file:
+            file.write("\n")
+        new_file = True
+
+    try:
+        with open(filename, "r") as file:
+            text = file.readlines()
+            if not text:
+                text = [""]  # Ensure one space because of this dumb line bug
+    except IOError as e:
+        print(f"Error loading file: {e}")
+        text = [""]
+
+    return [line.rstrip() for line in text], new_file
+
+def save_file(filename, text):
+    """Save the text to the file."""
+    try:
+        with open(filename, "w") as file:
+            for line in text:
+                file.write(line + "\n")
+        return True
+    except IOError as e:
+        print(f"Error saving file: {e}")
+        return False
+
 if __name__ == "__main__":
-    # Set up argument parsing for CLI
+    # Set up argument parsing for CL
     parser = argparse.ArgumentParser(description='Luced v.1.0 - Terminal Text Editor')
     parser.add_argument('filename', nargs='?', default='Test.txt', help='File to open or create')
     args = parser.parse_args()
