@@ -3,13 +3,14 @@ import pyperclip
 import argparse
 import os
 
+home = True
 def draw_text(stdscr, text, cursor_y, cursor_x, message=None):
     """Draw the text on the screen with cursor position and a message if needed."""
     stdscr.clear()
     max_y, max_x = stdscr.getmaxyx()  # Ensure these variables are set here
 
     # Draw top and bottom bars
-    top_bar = "Luced v.1.0 - Terminal Text Editor"
+    top_bar = "Luced v.2.0 - Terminal Text Editor"
     bottom_bar = "Ctrl + V: Paste Clipboard Content  Ctrl + S: Save File  Ctrl + Q: Exit  Alt + C: Copy to Clipboard"
 
     # Center the top bar
@@ -98,6 +99,7 @@ def main(stdscr, filename):
         if 'HOME' in os.environ and os.environ['HOME'] != '/root':
             clipboard_warning = ""
         else:
+            home = False
             clipboard_warning = "(If you want to use the Clipboard, relaunch with sudo -E)"
 
         # Calculate the centered position for the warning_root
@@ -137,17 +139,21 @@ def main(stdscr, filename):
         if key == 3:  # Ctrl-C to terminate
             break
         elif key == 22:  # Ctrl-V to paste
-            clipboard_text = pyperclip.paste()
-            if clipboard_text:  # Only paste if there's text in the clipboard
-                clipboard_lines = clipboard_text.splitlines()
-                for line in clipboard_lines:
-                    if cursor_y > len(text):
-                        text.append(line)
-                    else:
-                        text[cursor_y - 1] = text[cursor_y - 1][:cursor_x] + line + text[cursor_y - 1][cursor_x:]
-                    cursor_y += 1
-                cursor_y = min(cursor_y - 1, len(text))
-                cursor_x = len(text[cursor_y - 1]) if cursor_y <= len(text) else 0
+            if home:  # Check if running with sudo -E
+                clipboard_text = pyperclip.paste()
+                if clipboard_text:  # Only paste if there's text in the clipboard
+                    clipboard_lines = clipboard_text.splitlines()
+                    for line in clipboard_lines:
+                        if cursor_y > len(text):
+                            text.append(line)
+                        else:
+                            text[cursor_y - 1] = text[cursor_y - 1][:cursor_x] + line + text[cursor_y - 1][cursor_x:]
+                        cursor_y += 1
+                    cursor_y = min(cursor_y - 1, len(text))
+                    cursor_x = len(text[cursor_y - 1]) if cursor_y <= len(text) else 0
+            else:
+                draw_text(stdscr, text, cursor_y, cursor_x, "Clipboard access denied. Relaunch with sudo -E.")
+                stdscr.getch()  # Wait for a key press before continuing
         elif key == 19:  # Ctrl-S to save
             if save_file(filename, text):
                 draw_text(stdscr, text, cursor_y, cursor_x, "File saved successfully.")
@@ -177,9 +183,13 @@ def main(stdscr, filename):
             alt_key = stdscr.getch()
             if alt_key == ord('c'):
                 # Copy line to clipboard
-                if cursor_y <= len(text):
-                    pyperclip.copy(text[cursor_y - 1])
-                    draw_text(stdscr, text, cursor_y, cursor_x, "Line copied to clipboard.")
+                if home:  # Check if running with sudo -E
+                    if cursor_y <= len(text):
+                        pyperclip.copy(text[cursor_y - 1])
+                        draw_text(stdscr, text, cursor_y, cursor_x, "Line copied to clipboard.")
+                        stdscr.getch()  # Wait for a key press before continuing
+                else:
+                    draw_text(stdscr, text, cursor_y, cursor_x, "Clipboard access denied. Relaunch with sudo -E.")
                     stdscr.getch()  # Wait for a key press before continuing
         else:
             cursor_y, cursor_x = move_cursor(

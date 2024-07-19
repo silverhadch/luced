@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8a66756-d915-4a8c-9063-290a078a646b" name="Changes" comment="Prepera Beta">
+    <list default="true" id="b8a66756-d915-4a8c-9063-290a078a646b" name="Changes" comment="Copy enabled and sudo warnings for env Home or not">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -16,18 +16,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "silverhadch"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;silverhadch&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/silverhadch/luced.git",
-    "accountId": "38dcfb63-d06b-4f3a-a55f-708cf8368ae0"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/silverhadch/luced.git&quot;,
+    &quot;accountId&quot;: &quot;38dcfb63-d06b-4f3a-a55f-708cf8368ae0&quot;
   }
-}]]></component>
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -75,12 +75,21 @@
       <option name="project" value="LOCAL" />
       <updated>1721387283512</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Copy enabled and sudo warnings for env Home or not">
+      <option name="closed" value="true" />
+      <created>1721390269223</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1721390269224</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Prepera Beta" />
-    <option name="LAST_COMMIT_MESSAGE" value="Prepera Beta" />
+    <MESSAGE value="Copy enabled and sudo warnings for env Home or not" />
+    <option name="LAST_COMMIT_MESSAGE" value="Copy enabled and sudo warnings for env Home or not" />
   </component>
 </project>
