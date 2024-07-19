@@ -4,6 +4,8 @@ import argparse
 import os
 
 home = True
+
+
 def draw_text(stdscr, text, cursor_y, cursor_x, message=None):
     """Draw the text on the screen with cursor position and a message if needed."""
     stdscr.clear()
@@ -50,6 +52,7 @@ def draw_text(stdscr, text, cursor_y, cursor_x, message=None):
 
     stdscr.refresh()
 
+
 def move_cursor(key, cursor_y, cursor_x, text, max_y, max_x):
     """Update cursor position based on key input."""
     num_lines = len(text)
@@ -87,9 +90,11 @@ def move_cursor(key, cursor_y, cursor_x, text, max_y, max_x):
 
     return cursor_y, cursor_x
 
+
 def main(stdscr, filename):
     # If running as root, check for -E flag by examining an environment variable
     # Without -E the clipboard will break
+    global home
     if os.geteuid() == 0:
         stdscr.clear()
         max_y, max_x = stdscr.getmaxyx()
@@ -98,6 +103,7 @@ def main(stdscr, filename):
         # Check if the env HOME is set to detect if -E was used
         if 'HOME' in os.environ and os.environ['HOME'] != '/root':
             clipboard_warning = ""
+            home = True
         else:
             home = False
             clipboard_warning = "(If you want to use the Clipboard, relaunch with sudo -E)"
@@ -206,6 +212,7 @@ def main(stdscr, filename):
     curses.noraw()
     stdscr.keypad(False)
 
+
 def load_file(filename):
     """Load the content of the file, if it doesn't exist create one."""
     text = []
@@ -227,6 +234,7 @@ def load_file(filename):
 
     return [line.rstrip() for line in text], new_file
 
+
 def save_file(filename, text):
     """Save the text to the file."""
     try:
@@ -237,6 +245,7 @@ def save_file(filename, text):
     except IOError as e:
         print(f"Error saving file: {e}")
         return False
+
 
 if __name__ == "__main__":
     # Set up argument parsing for CL
