@@ -1,11 +1,11 @@
 import curses
 import signal
-import pyperclip  # Install with `pip install pyperclip`
+import pyperclip  #  A Dependency
 import argparse
 import os
 
 def load_file(filename):
-    """Load the content of a file into a list of lines. Create the file if it doesn't exist."""
+    """Load the content of the File, if it doesnt exist create one"""
     text = []
     new_file = False
     if not os.path.exists(filename):
@@ -18,7 +18,7 @@ def load_file(filename):
         with open(filename, "r") as file:
             text = file.readlines()
             if not text:
-                text = [""]  # Ensure at least one line if the file is empty
+                text = [""]  # Ensure one Space because of this dumb line bug
     except IOError as e:
         print(f"Error loading file: {e}")
         text = [""]
@@ -26,7 +26,7 @@ def load_file(filename):
     return [line.rstrip() for line in text], new_file
 
 def save_file(filename, text):
-    """Save the text content to a file."""
+    """Save the text to the File"""
     try:
         with open(filename, "w") as file:
             for line in text:
@@ -37,33 +37,33 @@ def save_file(filename, text):
         return False
 
 def draw_text(stdscr, text, cursor_y, cursor_x, message=None):
-    """Draw the text on the screen with cursor position highlighted and display a message if provided."""
+    """Draw the text on the screen with cursor position and display a message if needed."""
     stdscr.clear()
     max_y, max_x = stdscr.getmaxyx()
 
     # Draw top and bottom bars
     top_bar = "Luced v.1.0 - Terminal Text Editor"
-    bottom_bar = "Ctrl + V Paste Clipboard Content  Ctrl + S Save File  Ctrl + Q Exit"
+    bottom_bar = "Ctrl + V: Paste Clipboard Content  Ctrl + S: Save File  Ctrl + Q: Exit"
 
-    # Center the top bar
+    # Center the top 
     top_bar_x = (max_x - len(top_bar)) // 2
     stdscr.attron(curses.A_BOLD)
     stdscr.addstr(0, top_bar_x, top_bar[:max_x - top_bar_x], curses.A_REVERSE)
 
-    # Center the bottom bar
+    # Center the bottom 
     bottom_bar_x = (max_x - len(bottom_bar)) // 2
     stdscr.addstr(max_y - 1, bottom_bar_x, bottom_bar[:max_x - bottom_bar_x], curses.A_REVERSE)
     stdscr.attroff(curses.A_BOLD)
 
-    # Display a message if provided
+    # Display a message if needed
     if message:
         stdscr.addstr(max_y - 2, (max_x - len(message)) // 2, message, curses.A_BOLD | curses.A_REVERSE)
 
-    # Ensure cursor_y and cursor_x are within bounds
+    # Ensure cursor_y and cursor_x dont go to the lifeless void
     cursor_y = min(max(cursor_y, 1), len(text) + 1)
     cursor_x = min(max(cursor_x, 0), max_x - 1)
 
-    # Display text within visible area
+    # Display text within the window
     start_y = max(1, cursor_y - (max_y - 2) // 2)
     end_y = min(len(text) + 1, start_y + (max_y - 2))
 
@@ -80,7 +80,7 @@ def draw_text(stdscr, text, cursor_y, cursor_x, message=None):
         else:
             stdscr.addstr(line_y, 0, line)
 
-    # Move the cursor to the current position
+    # Move the cursor to necessary position
     try:
         stdscr.move(cursor_y - start_y + 1, cursor_x)
     except curses.error:
@@ -89,19 +89,19 @@ def draw_text(stdscr, text, cursor_y, cursor_x, message=None):
     stdscr.refresh()
 
 def signal_handler(signum, frame):
-    """Handle the interrupt signal (Ctrl-C) and exit."""
-    raise KeyboardInterrupt  # Raise KeyboardInterrupt to exit the program
+    """Handle the Interrupt-Dignal (Ctrl-C) and exit."""
+    raise KeyboardInterrupt  # Raise KeyboardInterrupt to exit
 
 def main(stdscr, filename):
-    # Set up signal handling for Ctrl-C
+    # Signalhandling for Ctrl-C
     signal.signal(signal.SIGINT, signal_handler)
 
-    # Initialize curses
+    # Initialize curses lib
     curses.curs_set(1)  # Show the cursor
     stdscr.clear()
     stdscr.refresh()
 
-    # Enable raw mode to capture all key presses
+    # Enable raw to capture all key presses
     curses.raw()
     stdscr.keypad(True)
 
@@ -110,11 +110,11 @@ def main(stdscr, filename):
 
     # Initial values
     cursor_x = 0
-    cursor_y = 1  # Start cursor at line 1 (below the top bar)
+    cursor_y = 1  # Start cursor at line 1 aka (below the top bar)
 
     if new_file:
         draw_text(stdscr, text, cursor_y, cursor_x, "New File Created")
-        stdscr.getch()  # Wait for a key press before continuing
+        stdscr.getch()  # Wait for a key before continuing
 
     while True:
         draw_text(stdscr, text, cursor_y, cursor_x)
@@ -125,7 +125,7 @@ def main(stdscr, filename):
             raise KeyboardInterrupt  # Exit the editor
         elif key == 22:  # Ctrl-V to paste
             clipboard_text = pyperclip.paste()
-            if clipboard_text:  # Only paste if there's text in the clipboard
+            if clipboard_text:  # Only paste if there's text because bugs
                 clipboard_lines = clipboard_text.splitlines()
                 for line in clipboard_lines:
                     if cursor_y > len(text):
@@ -194,7 +194,7 @@ def main(stdscr, filename):
     stdscr.keypad(False)
 
 if __name__ == "__main__":
-    # Set up argument parsing
+    # Set up argument parsing for CL
     parser = argparse.ArgumentParser(description='Luced v.1.0 - Terminal Text Editor')
     parser.add_argument('filename', nargs='?', default='Test.txt', help='File to open or create')
     args = parser.parse_args()
