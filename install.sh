@@ -25,10 +25,10 @@ fi
 
 # Download the luced executable and man page
 echo "Downloading $EXE_FILE from $REPO_URL..."
-wget -q --show-progress "$REPO_URL/raw/Beta-v.-2.0/$DIST_DIR/$EXE_FILE" -O "$EXE_FILE"
+wget -q --show-progress "$REPO_URL/raw/master/$DIST_DIR/$EXE_FILE" -O "$EXE_FILE"
 
 echo "Downloading $MAN_FILE from $REPO_URL..."
-wget -q --show-progress "$REPO_URL/raw/Beta-v.-2.0/$MAN_DIR/$MAN_FILE" -O "$MAN_FILE"
+wget -q --show-progress "$REPO_URL/raw/master/$MAN_DIR/$MAN_FILE" -O "$MAN_FILE"
 
 # Move files to appropriate directories
 echo "Installing $EXE_FILE to $BIN_DIR..."
