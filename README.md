@@ -1,4 +1,5 @@
 # Information
+Licensed under the GPL3.
 Open Source Nano Ripoff in Python lol.
 Dedicated to my Friend.
 Main-Development is finished, however Issues and Contributions are welcomed. Feel free to
