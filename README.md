@@ -11,7 +11,7 @@ Maintainer: Hadi Chokr
 Main-Contributer: Hadi Chokr
 
 # Dependencies
-
+If using the install script ignore.
 'Python' and
 'Python-pyperclip'
 
@@ -37,7 +37,8 @@ If running 'Luced' as root, the Clipboard is deactivated (because sudo doesnt ex
 
 'Ctrl-V' - Paste 
 
-# Install
+# Installation
+1. Download the install script
+2. chmod +x install.sh
+3. sudo ./install.sh
 
-The Binary/Executable are still being made with an Install script but if you can't wait git clone this repo and make an Path variable to luced/main.py and run with that variable and a file as an argument. (The File will be created automaticaly, if it doesnt exist
-exist.)
