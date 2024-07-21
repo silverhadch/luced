@@ -1,3 +1,5 @@
+# Current Status
+I am on Vacation or short development will be slow for some weeks.
 # Information
 Licensed under the GPL3.
 Open Source Nano Ripoff in Python lol.
