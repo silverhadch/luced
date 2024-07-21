@@ -12,7 +12,7 @@ def draw_text(stdscr, text, cursor_y, cursor_x, message=None):
     max_y, max_x = stdscr.getmaxyx()  # Ensure these variables are set here
 
     # Draw top and bottom bars
-    top_bar = "Luced v.2.0 - Terminal Text Editor"
+    top_bar = "Luced v.2.1 - Terminal Text Editor"
     bottom_bar = "Ctrl + Shift + V: Paste Clipboard Content  Ctrl + S: Save File  Ctrl + Q: Exit  Ctrl + Shift + C: Copy to Clipboard"
 
     # Center the top bar
