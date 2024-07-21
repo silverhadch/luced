@@ -2,7 +2,7 @@
 Licensed under the GPL3.
 Open Source Nano Ripoff in Python lol.
 Dedicated to my Friend.
-Main-Development is finished, however Issues and Contributions are welcomed. Feel free to
+Main-Development is finished, however Issues and Contributions are welcomed and will be made. Feel free to
 help.
 
 # Maintainer and Contributers
