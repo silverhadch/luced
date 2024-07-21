@@ -44,4 +44,4 @@ If running 'Luced' as root, the Clipboard is deactivated (because sudo doesnt ex
 1. Download the install script
 2. chmod +x install.sh
 3. sudo ./install.sh
-Note that Testing and Alpha dont provide an executable. And the AUR branch has an Pkgbuild which will later be realesed on the AUR.
+Note that Testing aka Dev and Alpha dont provide an executable. And the AUR branch has an Pkgbuild which will later be realesed on the AUR.
