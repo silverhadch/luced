@@ -13,7 +13,7 @@ def draw_text(stdscr, text, cursor_y, cursor_x, message=None):
 
     # Draw top and bottom bars
     top_bar = "Luced v.2.0 - Terminal Text Editor"
-    bottom_bar = "Ctrl + V: Paste Clipboard Content  Ctrl + S: Save File  Ctrl + Q: Exit  Alt + C: Copy to Clipboard"
+    bottom_bar = "Ctrl + Shift + V: Paste Clipboard Content  Ctrl + S: Save File  Ctrl + Q: Exit  Ctrl + Shift + C: Copy to Clipboard"
 
     # Center the top bar
     top_bar_x = (max_x - len(top_bar)) // 2
@@ -144,7 +144,7 @@ def main(stdscr, filename):
 
         if key == 3:  # Ctrl-C to terminate
             break
-        elif key == 22:  # Ctrl-V to paste
+        elif key == 22 and shift:  # Ctrl-Shift-V to paste
             if home:  # Check if running with sudo -E
                 clipboard_text = pyperclip.paste()
                 if clipboard_text:  # Only paste if there's text in the clipboard
@@ -185,18 +185,17 @@ def main(stdscr, filename):
                 text[cursor_y - 1] = text[cursor_y - 1][:cursor_x]
             cursor_y += 1
             cursor_x = 0
-        elif key == 27:  # Alt key
-            alt_key = stdscr.getch()
-            if alt_key == ord('c'):
-                # Copy line to clipboard
-                if home:  # Check if running with sudo -E
-                    if cursor_y <= len(text):
-                        pyperclip.copy(text[cursor_y - 1])
-                        draw_text(stdscr, text, cursor_y, cursor_x, "Line copied to clipboard.")
-                        stdscr.getch()  # Wait for a key press before continuing
+        elif key == 3 and shift:  # Ctrl+Shift+C
+    # Copy line to clipboard
+            if home:  # Check if running with sudo -E
+                if cursor_y <= len(text):
+                    pyperclip.copy(text[cursor_y - 1])
+                    draw_text(stdscr, text, cursor_y, cursor_x, "Line copied to clipboard.")
+                    stdscr.getch()  # Wait for a key press before continuing
                 else:
                     draw_text(stdscr, text, cursor_y, cursor_x, "Clipboard access denied. Relaunch with sudo -E.")
                     stdscr.getch()  # Wait for a key press before continuing
+
         else:
             cursor_y, cursor_x = move_cursor(
                 key, cursor_y, cursor_x, text, stdscr.getmaxyx()[0], stdscr.getmaxyx()[1]
