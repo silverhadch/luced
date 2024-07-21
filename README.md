@@ -34,9 +34,9 @@ Here all:
 
 If running 'Luced' as root, the Clipboard is deactivated (because sudo doesnt export the HOME env variable for the Clipboard) unless you relaunch with sudo -E ... 
 
-'Alt-C' - Copy (with mouse selected Text)
+'Ctrl-Shift-C' - Copy (with mouse selected Text)
 
-'Ctrl-V' - Paste 
+'Ctrl-Shift-V' - Paste 
 
 # Installation
 1. Download the install script
