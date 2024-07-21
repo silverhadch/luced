@@ -39,7 +39,5 @@ If running 'Luced' as root, the Clipboard is deactivated (because sudo doesnt ex
 'Ctrl-Shift-V' - Paste 
 
 # Installation
-1. Download the install script
-2. chmod +x install.sh
-3. sudo ./install.sh
+Testing is not provided with a executable.
 
