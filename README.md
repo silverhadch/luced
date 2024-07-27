@@ -1,5 +1,5 @@
 # Current Status
-I am on Vacation. Development will be slow for some weeks.
+This Version is cancelled and will be replaced with a C++ Version.
 # Information
 Licensed under the GPL3.
 Open Source Nano Ripoff in Python lol.
